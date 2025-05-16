@@ -18,7 +18,7 @@ class ArticleForm extends AbstractType
             ->add('content')
             ->add('categories', EntityType::class, [
                 'class' => Category::class,
-                'choice_label' => 'id',
+                'choice_label' => 'title',
                 'multiple' => true,
             ])
         ;
