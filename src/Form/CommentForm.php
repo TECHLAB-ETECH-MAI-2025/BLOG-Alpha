@@ -16,11 +16,6 @@ class CommentForm extends AbstractType
         $builder
             ->add('author')
             ->add('content')
-            ->add('createdAt')
-            ->add('article', EntityType::class, [
-                'class' => Article::class,
-                'choice_label' => 'id',
-            ])
         ;
     }
 

@@ -19,8 +19,27 @@
                 <th>Content</th>
                 <td>{{ article.content }}</td>
             </tr>
+           
+           <tr>
+                <th>Commentaires</th>
+                <td>
+                    {% for comment in article.comments %}
+                        <p><strong>{{ comment.author }}</strong> - {{ comment.createdAt|date('d/m/Y H:i') }}</p>
+                        <p>{{ comment.content }}</p>
+                        <hr>
+                    {% else %}
+                        <p>Aucun commentaire pour le moment.</p>
+                    {% endfor %}
+                </td>
+            </tr>
         </tbody>
     </table>
+
+    <h2>Ajouter un commentaire</h2>
+        {{ form_start(commentForm) }}
+        {{ form_widget(commentForm) }}
+        <button class="btn btn-primary">Publier</button>
+        {{ form_end(commentForm) }}
 
     <a href="{{ path('app_article_index') }}">back to list</a>
 
