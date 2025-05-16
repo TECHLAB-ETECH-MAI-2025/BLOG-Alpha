@@ -44,7 +44,7 @@ class ArticleForm extends AbstractType
                 'expanded' => true,
                 'attr' => [
 					'class' => 'form-check',
-                    'style' => 'display: flex; flex-direction: column;'
+                    'style' => 'display: flex; flex-direction: column; margin-left: 40px;'
                 ],
                 'label_attr' => [
 						'class' => 'form-check-label'
