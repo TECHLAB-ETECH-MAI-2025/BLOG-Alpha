@@ -1,37 +1,58 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Article index{% endblock %}
+{% block title %}Articles{% endblock %}
 
 {% block body %}
-    <h1 class="p-3 text-grey text-center">Mon Article</h1>
+    <div class="container mt-4">
+        <h1 class="text-center text-success">Mon Article</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Id</th>
-                <th scope="col">Title</th>
-                <th scope="col">Content</th>
-                <th scope="col">actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for article in articles %}
-            <tr>
-                <td>{{ article.id }}</td>
-                <td>{{ article.title }}</td>
-                <td>{{ article.content }}</td>
-                <td>
-                    <a href="{{ path('app_article_show', {'id': article.id}) }}">show</a>
-                    <a href="{{ path('app_article_edit', {'id': article.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">no records found</td>
-            </tr>
+        <div class="row">
+            {% for article in articles %}
+                <div class="col-md-8 offset-md-2">
+                    <div class="card shadow-lg mb-4 border-0">
+                        <div class="card-body">
+                            <h4 class="text-primary">{{ article.title }}</h4>
+                            <p class="text-muted">{{ article.content }}</p>
+                        </div>
+
+                        <div class="card-footer text-end bg-white">
+                            <a class="btn btn-outline-primary me-2" href="{{ path('app_article_show', {'id': article.id}) }}">Voir</a>
+                            <a class="btn btn-outline-warning" href="{{ path('app_article_edit', {'id': article.id}) }}">Modifier</a>
+                            <a class="btn btn-outline-danger me-2" href="{{ path('app_article_delete', {'id': article.id}) }}">Supprimer</a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-md-12 text-center">
+                    <p class="text-danger">Aucun article trouvé.</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="text-center mt-3">
+            <a class="btn btn-success" href="{{ path('app_article_new') }}">Créer un nouvel article</a>
+        </div>
+    </div>
+<nav aria-label="Pagination">
+    <ul class="pagination ">
+        {% if currentPage > 1 %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ currentPage - 1 }}">Précédent</a>
+            </li>
+        {% endif %}
+
+        {% for page in 1..totalPages %}
+            <li class="page-item {% if page == currentPage %}active{% endif %}">
+                <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+            </li>
         {% endfor %}
-        </tbody>
-    </table>
 
-    <a href="{{ path('app_article_new') }}">Create new</a>
+        {% if currentPage < totalPages %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ currentPage + 1 }}">Suivant</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+
 {% endblock %}

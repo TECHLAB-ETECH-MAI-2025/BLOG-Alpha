@@ -17,11 +17,30 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ArticleController extends AbstractController
 {
     #[Route(name: 'app_article_index', methods: ['GET'])]
-    public function index(ArticleRepository $articleRepository): Response
+    public function index(ArticleRepository $articleRepository,Request $request, EntityManagerInterface $em): Response
     {
+            $page = max(1, $request->query->getInt('page', 1));
+            $limit = 2;
+            $offset = ($page - 1) * $limit;
+            $paginator = $articleRepository->ArticlePaginator($page, $limit);
+
+                $query = $em->getRepository(Article::class)
+                ->createQueryBuilder('a')
+                ->setFirstResult(0)
+                ->setMaxResults($limit)
+                ->getQuery();
+                
+            $articles = $query->getResult();
+
+    $totalArticles =$em->getRepository(Article::class)->count([]);
+    $totalPages = ceil($totalArticles / $limit);
+    // dd(totalPages);
         return $this->render('article/index.html.twig', [
-            'articles' => $articleRepository->findAll(),
+            'articles' => $articles,
+            'totalPages' => $totalPages,
+            'currentPage' => $page,
         ]);
+    
     }
 
     #[Route('/new', name: 'app_article_new', methods: ['GET', 'POST'])]
@@ -54,18 +73,15 @@ final class ArticleController extends AbstractController
 			$form = $this->createForm(CommentForm::class, $comment);
 			$form->handleRequest($request);
 
-			// // Traitement du formulaire
 			if ($form->isSubmitted() && $form->isValid()) {
 				$comment->setCreatedAt(new \DateTimeImmutable());
-				// Enregistrement du commentaire
 				$entityManager->persist($comment);
 				$entityManager->flush();
-				// // Message de succès
 				$this->addFlash('success', 'Votre commentaire a été publié avec succès !');
 
                 return $this->redirectToRoute('app_article_show', ['id' => $article->getId()], Response::HTTP_SEE_OTHER);
             }
-				// Redirection pour éviter le rechargement du formulaire
+
 				return $this->render('article/show.html.twig', [
 				'article' => $article,
 				'commentForm' => $form->createView(),
@@ -95,8 +111,13 @@ final class ArticleController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$article->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($article);
             $entityManager->flush();
+        return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
-    }
+        // return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
+       return $this->render('article/index.html.twig', [
+            'article' => $article,
+            'form' => $form,
+        ]);
+   }
 }
