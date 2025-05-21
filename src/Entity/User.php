@@ -31,12 +31,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    public function __construct()
-    {
-        $this->createdAt = new \DateTimeImmutable();
-        $this->roles = ['ROLE-USER'];
-        $this->isVerified = false;
-    }
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $firstName = null;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $lastName = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column]
+    private ?bool $isVerified = null;
 
 
     public function getId(): ?int
@@ -111,58 +116,52 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getFirstName() : ?string
+    public function getFirstName(): ?string
     {
         return $this->firstName;
     }
 
-    public function setFirstName(?string $firstName)
+    public function setFirstName(?string $firstName): static
     {
         $this->firstName = $firstName;
+
         return $this;
     }
-    
-    public function getLastName() : ?string
+
+    public function getLastName(): ?string
     {
         return $this->lastName;
     }
 
-    
-    public function setLastName(?string $lastName)
+    public function setLastName(?string $lastName): static
     {
         $this->lastName = $lastName;
+
         return $this;
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable
-		{
-			return $this->createdAt;
-		}
+    {
+        return $this->createdAt;
+    }
 
-    public function setCreatedAt(?\DateTimeImmutable $createdAt) : static
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 
-    public function isVerified(): ?bool 
-		{
-			return $this->isVerified;
-		}
+    public function isVerified(): ?bool
+    {
+        return $this->isVerified;
+    }
 
-    public function setIsverified(bool $isVerified) :static
+    public function setIsVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
+
         return $this;
     }
-
-	public function getFullName(): string
-	{
-		if ($this->firstName && $this->lastName) {
-			return $this->firstName . ' ' . $this->lastName;
-		}
-
-		return $this->email;
-	}
 
 }
