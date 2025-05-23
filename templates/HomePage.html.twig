@@ -1,9 +1,17 @@
 {% extends 'base.html.twig' %}
 {% block body %}
        <nav class="navbar fix-top bg-body-tertiary">
+                <div>
+                     <h2>Mon blog</h2>
+                </div>  
+
                 <a href="">Acceuil</a>
-                <a href="">Article</a>
-                <a href="">A propos</a>
+                <a href="{{ path('app_article_index') }}">Articles</a>
+                <a href="{{ path('app_category_index') }}">Category</a>
+
+                <div>
+                     <a href="{{ path('app_article_index') }}" class="btn btn-outline-primary me-2">Sing up</a>
+                </div>
        </nav>
 
        <div>

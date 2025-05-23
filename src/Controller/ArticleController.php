@@ -20,7 +20,7 @@ final class ArticleController extends AbstractController
     public function index(ArticleRepository $articleRepository,Request $request, EntityManagerInterface $em): Response
     {
             $page = max(1, $request->query->getInt('page', 1));
-            $limit = 2;
+            $limit = 6;
             $offset = ($page - 1) * $limit;
             $paginator = $articleRepository->ArticlePaginator($page, $limit);
 

@@ -20,4 +20,10 @@ final class HomePageController extends AbstractController
     {
         return $this->render('HomePage.html.twig');
     }
+
+     #[Route('/article', name: 'article')]
+    public function ShowArticle():Response
+    {
+        return $this->render('article/index.html.twig');
+    }
 }
